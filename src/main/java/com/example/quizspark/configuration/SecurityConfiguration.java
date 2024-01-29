@@ -1,8 +1,5 @@
 package com.example.quizspark.configuration;
 
-package com.wildevent.WildEventMenager.security.config;
-
-import com.wildevent.WildEventMenager.security.AccessUrlProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +18,7 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
