@@ -1,4 +1,4 @@
-package com.wildevent.WildEventMenager.security.config;
+package com.example.quizspark.configuration;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
