@@ -1,9 +1,12 @@
-package com.example.quizspark.authentication;
+package com.example.quizspark.security.authentication.service;
 
+import com.example.quizspark.security.authentication.requests.AuthenticationRequest;
+import com.example.quizspark.security.authentication.requests.RegisterRequest;
+import com.example.quizspark.security.authentication.responses.AuthenticationResponse;
+import com.example.quizspark.security.user.User;
+import com.example.quizspark.user.UserRepository;
 import com.example.quizspark.configuration.JwtService;
 import com.example.quizspark.user.Role;
-import com.example.quizspark.user.User;
-import com.example.quizspark.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

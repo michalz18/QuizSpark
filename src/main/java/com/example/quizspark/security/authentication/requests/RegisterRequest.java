@@ -1,4 +1,4 @@
-package com.example.quizspark.authentication;
+package com.example.quizspark.security.authentication.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.example.quizspark.configuration;
+package com.example.quizspark.security.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -35,7 +35,7 @@ public class SecurityConfiguration {
                     return configuration;
                 }))
                 .authorizeHttpRequests(authRequests -> authRequests
-                        .requestMatchers(new AntPathRequestMatcher("/no-auth/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/authentication/*")).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(sessionMgmt -> sessionMgmt
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
