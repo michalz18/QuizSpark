@@ -31,7 +31,7 @@ export default function SignUp() {
         try {
             await registerUser(userData);
             console.log('Registration process was successful');
-            navigate('/dashboard');
+            navigate('/signup');
         } catch (error) {
             console.error('Error during registration process:', error);
         }
