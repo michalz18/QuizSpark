@@ -12,10 +12,15 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link as RouterLink, useNavigate} from 'react-router-dom';
 import { registerUser } from '../api/authService'
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import {useState} from "react";
+
 
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+    const [openSnackbar, setOpenSnackbar] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
@@ -31,10 +36,18 @@ export default function SignUp() {
         try {
             await registerUser(userData);
             console.log('Registration process was successful');
+            setOpenSnackbar(true);
             navigate('/signup');
         } catch (error) {
             console.error('Error during registration process:', error);
         }
+    };
+
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackbar(false);
     };
 
     return (
@@ -117,6 +130,11 @@ export default function SignUp() {
                         </Grid>
                     </Box>
                 </Box>
+                <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                    <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+                        Registration successful!
+                    </Alert>
+                </Snackbar>
             </Container>
         </ThemeProvider>
     );
