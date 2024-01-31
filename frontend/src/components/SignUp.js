@@ -10,18 +10,31 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Link as RouterLink } from 'react-router-dom';
+import {Link as RouterLink, useNavigate} from 'react-router-dom';
+import { registerUser } from '../api/authService'
 
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-    const handleSubmit = (event) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
+        const userData = {
             email: data.get('email'),
             password: data.get('password'),
-        });
+            firstName: data.get('firstName'),
+            lastName: data.get('lastName'),
+        };
+
+        try {
+            await registerUser(userData);
+            console.log('Registration process was successful');
+            navigate('/dashboard');
+        } catch (error) {
+            console.error('Error during registration process:', error);
+        }
     };
 
     return (
