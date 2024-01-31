@@ -1,12 +1,13 @@
 package com.example.quizspark.security.authentication.service;
 
+import com.example.quizspark.assets.UserNotFoundException;
 import com.example.quizspark.security.authentication.requests.AuthenticationRequest;
 import com.example.quizspark.security.authentication.requests.RegisterRequest;
 import com.example.quizspark.security.authentication.responses.AuthenticationResponse;
 import com.example.quizspark.security.user.User;
-import com.example.quizspark.user.UserRepository;
-import com.example.quizspark.configuration.JwtService;
-import com.example.quizspark.user.Role;
+import com.example.quizspark.security.user.UserRepository;
+import com.example.quizspark.security.configuration.JwtService;
+import com.example.quizspark.security.user.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,15 +46,12 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
-        var user = userRepository.findByEmail(request.getEmail()) //handle exception
-                .orElseThrow();
+        var user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + request.getEmail()));
 
-        return null;
+        var jwtToken = jwtService.generateToken(user);
+        return AuthenticationResponse.builder().token(jwtToken).build();
     }
 }

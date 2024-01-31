@@ -1,4 +1,4 @@
-package com.example.quizspark.configuration;
+package com.example.quizspark.security.configuration;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

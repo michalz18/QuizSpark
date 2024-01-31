@@ -1,4 +1,4 @@
-package com.example.quizspark.user;
+package com.example.quizspark.security.user;
 
 public enum Role {
     USER,

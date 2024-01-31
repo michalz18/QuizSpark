@@ -1,4 +1,4 @@
-package com.example.quizspark.configuration;
+package com.example.quizspark.security.configuration;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

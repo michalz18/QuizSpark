@@ -1,4 +1,4 @@
-package com.example.quizspark.user;
+package com.example.quizspark.security.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
