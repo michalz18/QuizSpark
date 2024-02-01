@@ -12,19 +12,38 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { authenticateUser } from '../api/authService';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
-    };
+    const navigate = useNavigate();
+    const { login } = useAuth();
+
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+        },
+        validationSchema: Yup.object({
+            email: Yup.string().email('Invalid email address').required('Required'),
+            password: Yup.string().required('Required'),
+        }),
+        onSubmit: async (values, { setFieldError }) => {
+            try {
+                const response = await authenticateUser(values);
+                login(values, response.token);
+                navigate('/dashboard');
+            } catch (error) {
+                console.error('Authentication failed', error);
+                setFieldError('general', 'Incorrect email or password');
+            }
+        },
+    });
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -44,7 +63,7 @@ export default function SignIn() {
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField
                             margin="normal"
                             required
@@ -54,6 +73,10 @@ export default function SignIn() {
                             name="email"
                             autoComplete="email"
                             autoFocus
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            error={formik.touched.email && Boolean(formik.errors.email)}
+                            helperText={formik.touched.email && formik.errors.email}
                         />
                         <TextField
                             margin="normal"
@@ -64,7 +87,12 @@ export default function SignIn() {
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            value={formik.values.password}
+                            onChange={formik.handleChange}
+                            error={formik.touched.password && Boolean(formik.errors.password)}
+                            helperText={formik.touched.password && formik.errors.password}
                         />
+                        {formik.errors.general && <div style={{ color: 'red', marginTop: '10px' }}>{formik.errors.general}</div>}
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
                             label="Remember me"
@@ -79,7 +107,7 @@ export default function SignIn() {
                         </Button>
                         <Grid container>
                             <Grid item>
-                                <Link component={RouterLink} to="/signup" href="#" variant="body2">
+                                <Link component={RouterLink} to="/signup" variant="body2">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>

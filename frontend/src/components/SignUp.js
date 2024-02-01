@@ -10,11 +10,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {Link as RouterLink, useNavigate} from 'react-router-dom';
-import { registerUser } from '../api/authService'
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { registerUser } from '../api/authService';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import {useState} from "react";
+import { useState } from "react";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -33,8 +33,8 @@ export default function SignUp() {
 
     const formik = useFormik({
         initialValues: {
-            firstName: '',
-            lastName: '',
+            firstname: '',
+            lastname: '',
             email: '',
             password: '',
         },
@@ -43,13 +43,14 @@ export default function SignUp() {
             try {
                 await registerUser(values);
                 console.log('Registration process was successful');
-                navigate('/signup');
+                setOpenSnackbar(true);
+                navigate('/');
+                formik.resetForm();
             } catch (error) {
                 console.error('Error during registration process:', error);
             }
         },
     });
-
 
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
@@ -131,7 +132,7 @@ export default function SignUp() {
                                     id="password"
                                     autoComplete="new-password"
                                     value={formik.values.password}
-                                    onChange={formik.password}
+                                    onChange={formik.handleChange}
                                     error={formik.touched.password && Boolean(formik.errors.password)}
                                     helperText={formik.touched.password && formik.errors.password}
                                 />
@@ -147,7 +148,7 @@ export default function SignUp() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link component={RouterLink} to="/" href="#" variant="body2">
+                                <Link component={RouterLink} to="/" variant="body2">
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>
