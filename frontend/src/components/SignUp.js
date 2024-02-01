@@ -3,6 +3,10 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -19,10 +23,11 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 const validationSchema = Yup.object({
-    firstName: Yup.string().required('First name is required'),
-    lastName: Yup.string().required('Last name is required'),
+    firstname: Yup.string().required('First name is required'),
+    lastname: Yup.string().required('Last name is required'),
     email: Yup.string().email('Enter a valid email').required('Email is required'),
     password: Yup.string().min(8, 'Password should be of minimum 8 characters length').required('Password is required'),
+    role: Yup.string().required('Role is required')
 });
 
 const defaultTheme = createTheme();
@@ -37,6 +42,7 @@ export default function SignUp() {
             lastname: '',
             email: '',
             password: '',
+            role: ''
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
@@ -82,16 +88,16 @@ export default function SignUp() {
                             <Grid item xs={12} sm={6}>
                                 <TextField
                                     autoComplete="given-name"
-                                    name="firstName"
+                                    name="firstname"
                                     required
                                     fullWidth
-                                    id="firstName"
+                                    id="firstname"
                                     label="First Name"
                                     autoFocus
-                                    value={formik.values.firstName}
+                                    value={formik.values.firstname}
                                     onChange={formik.handleChange}
-                                    error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-                                    helperText={formik.touched.firstName && formik.errors.firstName}
+                                    error={formik.touched.firstname && Boolean(formik.errors.firstname)}
+                                    helperText={formik.touched.firstname && formik.errors.firstname}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -100,12 +106,12 @@ export default function SignUp() {
                                     fullWidth
                                     id="lastName"
                                     label="Last Name"
-                                    name="lastName"
+                                    name="lastname"
                                     autoComplete="family-name"
-                                    value={formik.values.lastName}
+                                    value={formik.values.lastname}
                                     onChange={formik.handleChange}
-                                    error={formik.touched.lastName && Boolean(formik.errors.lastName)}
-                                    helperText={formik.touched.lastName && formik.errors.lastName}
+                                    error={formik.touched.lastname && Boolean(formik.errors.lastname)}
+                                    helperText={formik.touched.lastname && formik.errors.lastname}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -136,6 +142,23 @@ export default function SignUp() {
                                     error={formik.touched.password && Boolean(formik.errors.password)}
                                     helperText={formik.touched.password && formik.errors.password}
                                 />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="role-select-label">Role</InputLabel>
+                                    <Select
+                                        labelId="role-select-label"
+                                        id="role"
+                                        name="role"
+                                        value={formik.values.role}
+                                        label="Role"
+                                        onChange={formik.handleChange}
+                                        error={formik.touched.role && Boolean(formik.errors.role)}
+                                    >
+                                        <MenuItem value={"USER"}>User</MenuItem>
+                                        <MenuItem value={"ADMIN"}>Admin</MenuItem>
+                                    </Select>
+                                </FormControl>
                             </Grid>
                         </Grid>
                         <Button
