@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-    Box,
     Card,
     CardContent,
     TextField,
@@ -9,7 +8,8 @@ import {
     Checkbox,
     Grid,
     CardActions,
-    Tooltip
+    Tooltip,
+    Divider
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -29,30 +29,35 @@ const QuestionCard = ({ question, index, onChange, onDelete, onAnswerChange, onA
                     />
                 </Grid>
             </Grid>
+            <Divider sx={{ my: 2 }} />
             {question.answers.map((answer, aIndex) => (
-                <Box key={aIndex} display="flex" alignItems="center" mt={1}>
-                    <TextField
-                        fullWidth
-                        label={`Answer ${aIndex + 1}`}
-                        value={answer.answerContent}
-                        onChange={e => onAnswerChange(e, index, aIndex)}
-                        margin="normal"
-                        sx={{ flexGrow: 1 }}
-                    />
-                    <Tooltip title="Select as correct answer" placement="top">
-                    <Checkbox
-                        checked={answer.isCorrect}
-                        onChange={e => onAnswerChange(e, index, aIndex, 'isCorrect')}
-                        color="primary"
-                        sx={{ mx: 2 }}
-                    />
-                    </Tooltip>
-                    <Tooltip title="Remove answer" placement="top">
-                    <IconButton color="primary" onClick={() => onDeleteAnswer(index, aIndex)}>
-                        <DeleteIcon />
-                    </IconButton>
-                    </Tooltip>
-                </Box>
+                <Grid container spacing={2} alignItems="center" key={aIndex}>
+                    <Grid item xs={12} sm={6} md={8}>
+                        <TextField
+                            fullWidth
+                            label={`Answer ${aIndex + 1}`}
+                            value={answer.answerContent}
+                            onChange={e => onAnswerChange(e, index, aIndex)}
+                            margin="normal"
+                        />
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Tooltip title="Select as correct answer" placement="top">
+                            <Checkbox
+                                checked={answer.isCorrect}
+                                onChange={e => onAnswerChange(e, index, aIndex, 'isCorrect')}
+                                color="primary"
+                            />
+                        </Tooltip>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Tooltip title="Remove an answer" placement="top">
+                        <IconButton color="primary" onClick={() => onDeleteAnswer(index, aIndex)}>
+                            <DeleteIcon />
+                        </IconButton>
+                        </Tooltip>
+                    </Grid>
+                </Grid>
             ))}
             <Button startIcon={<AddCircleOutlineIcon />} onClick={() => onAddAnswer(index)}>
                 Add Answer

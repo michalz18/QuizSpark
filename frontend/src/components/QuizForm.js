@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Pagination } from '@mui/material';
+import {Box, TextField, Button, Pagination, Grid} from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import QuestionCard from './QuestionCard';
 
@@ -66,13 +66,20 @@ const QuizForm = () => {
 
     return (
         <Box sx={{ my: 4 }}>
-            <TextField
-                fullWidth
-                label="Quiz Title"
-                value={quiz.title}
-                onChange={(e) => setQuiz({ ...quiz, title: e.target.value })}
-                margin="normal"
-            />
+            <Grid container justifyContent="center">
+                <Grid item xs={12} sm={8} md={6}>
+                    <TextField
+                        fullWidth
+                        label="Quiz Title"
+                        value={quiz.title}
+                        onChange={(e) => setQuiz({ ...quiz, title: e.target.value })}
+                        margin="normal"
+                        sx={{
+                            mb: 4,
+                        }}
+                    />
+                </Grid>
+            </Grid>
             <QuestionCard
                 question={quiz.questions[currentPage - 1]}
                 index={currentPage - 1}
