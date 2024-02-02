@@ -3,6 +3,8 @@ import {Box, TextField, Button, Pagination, Grid} from '@mui/material';
 import QuestionCard from './QuestionCard';
 import SaveIcon from '@mui/icons-material/Save';
 import AddBoxIcon from '@mui/icons-material/AddBox';
+import { createQuiz } from '../api/secured/quizService';
+
 
 const QuizForm = () => {
     const [quiz, setQuiz] = useState({
@@ -10,6 +12,15 @@ const QuizForm = () => {
         questions: [{ questionContent: '', answers: [] }]
     });
     const [currentPage, setCurrentPage] = useState(1);
+
+    const handleSubmitQuiz = async () => {
+        try {
+            const response = await createQuiz(quiz);
+            console.log('Quiz saved successfully');
+        } catch (error) {
+            console.error('Error saving the quiz', error);
+        } f
+    };
 
 
     const validateCurrentQuestion = () => {
@@ -40,7 +51,7 @@ const QuizForm = () => {
     const handleAnswerChange = (event, qIndex, aIndex, field = 'answerContent', newValue = '') => {
         const newQuestions = [...quiz.questions];
         const newAnswers = [...newQuestions[qIndex].answers];
-        newAnswers[aIndex] = { ...newAnswers[aIndex], [field]: field === 'isCorrect' ? event.target.checked : newValue };
+        newAnswers[aIndex] = { ...newAnswers[aIndex], [field]: field === 'isCorrect' ? event.target.checked : event.target.value };
         newQuestions[qIndex].answers = newAnswers;
 
         setQuiz({ ...quiz, questions: newQuestions });
@@ -119,7 +130,7 @@ const QuizForm = () => {
                 </Button>
                 <Button
                     startIcon={<SaveIcon />}
-                    onClick={() => console.log('Submitting Quiz...')}
+                    onClick={handleSubmitQuiz}
                     variant="contained"
                     color="primary"
                 >
