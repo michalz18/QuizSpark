@@ -1,6 +1,8 @@
 package com.example.quizspark.quizzes.controller;
 
+import com.example.quizspark.quizzes.dto.AnswerDTO;
 import com.example.quizspark.quizzes.dto.QuizDTO;
+import com.example.quizspark.quizzes.dto.ResultDTO;
 import com.example.quizspark.quizzes.mapper.QuizMapper;
 import com.example.quizspark.quizzes.model.Quiz;
 import com.example.quizspark.quizzes.service.QuizService;
@@ -49,4 +51,11 @@ public class QuizController {
 
         return ResponseEntity.ok(quizDTOs);
     }
+    @PostMapping("/{id}/solve")
+    public ResponseEntity<ResultDTO> solveQuiz(@PathVariable UUID id, @RequestBody List<AnswerDTO> answers) {
+        logger.info("Solving quiz with id: {}", id);
+        ResultDTO result = quizService.solveQuiz(id, answers);
+        return ResponseEntity.ok(result);
+    }
+
 }
