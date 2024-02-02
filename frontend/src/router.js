@@ -4,6 +4,7 @@ import SignIn from './components/SignIn';
 import SignUp from "./components/SignUp";
 import DashboardAppBar from "./components/DashboardAppBar";
 import { AuthProvider } from './context/AuthContext';
+import HomePage from "./pages/HomePage";
 
 const AppRouter = () => {
     return (
@@ -12,7 +13,7 @@ const AppRouter = () => {
                 <Routes>
                     <Route path="/" element={<SignIn />} />
                     <Route path="/signup" element={<SignUp />} />
-                    <Route path="/dashboard" element={<DashboardAppBar />} />
+                    <Route path="/dashboard" element={<HomePage />} />
                 </Routes>
             </Router>
         </AuthProvider>

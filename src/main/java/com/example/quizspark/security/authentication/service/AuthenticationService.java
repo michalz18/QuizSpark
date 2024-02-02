@@ -52,6 +52,6 @@ public class AuthenticationService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + request.getEmail()));
 
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        return AuthenticationResponse.builder().email(request.getEmail()).token(jwtToken).build();
     }
 }
