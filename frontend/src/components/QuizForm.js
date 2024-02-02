@@ -4,7 +4,7 @@ import QuestionCard from './QuestionCard';
 import SaveIcon from '@mui/icons-material/Save';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { createQuiz } from '../api/secured/quizService';
-
+import ConfirmationDialog from './ConfirmationDialog';
 
 const QuizForm = () => {
     const [quiz, setQuiz] = useState({
@@ -12,30 +12,51 @@ const QuizForm = () => {
         questions: [{ questionContent: '', answers: [] }]
     });
     const [currentPage, setCurrentPage] = useState(1);
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
-    const handleSubmitQuiz = async () => {
+    const submitQuiz = async () => {
+        if (!validateQuiz()) return;
         try {
-            const response = await createQuiz(quiz);
-            console.log('Quiz saved successfully');
+            await createQuiz(quiz);
+            setQuiz({ title: '', questions: [{ questionContent: '', answers: [] }] });
+            setCurrentPage(1);
+            setConfirmOpen(false);
+            alert('Quiz saved successfully!');
         } catch (error) {
-            console.error('Error saving the quiz', error);
-        } f
+            console.error('Error during saving the quiz', error);
+            alert('Error saving quiz. Please try again.');
+        }
     };
 
-
-    const validateCurrentQuestion = () => {
-        const currentQuestion = quiz.questions[currentPage - 1];
-        if (!currentQuestion.questionContent.endsWith('?') || currentQuestion.questionContent === '') {
-            alert('Question must end with a question mark and cannot be empty.');
+    const validateQuiz = () => {
+        if (!quiz.title) {
+            alert('Please enter a quiz title.');
             return false;
         }
-
-        const hasEmptyAnswer = currentQuestion.answers.some(answer => answer.answerContent === '');
-        if (hasEmptyAnswer) {
-            alert('All answers must be filled.');
-            return false;
+        for (let i = 0; i < quiz.questions.length; i++) {
+            if (!quiz.questions[i].questionContent) {
+                alert(`Please enter a content for question ${i + 1}.`);
+                return false;
+            }
+            if (quiz.questions[i].answers.length < 2) {
+                alert(`Please add at least 2 answers for question ${i + 1}.`);
+                return false;
+            }
+            let correctAnswers = 0;
+            for (let j = 0; j < quiz.questions[i].answers.length; j++) {
+                if (!quiz.questions[i].answers[j].answerContent) {
+                    alert(`Please enter an answer content for question ${i + 1}, answer ${j + 1}.`);
+                    return false;
+                }
+                if (quiz.questions[i].answers[j].isCorrect) {
+                    correctAnswers++;
+                }
+            }
+            if (correctAnswers !== 1) {
+                alert(`Please ensure that only one answer is marked as correct for question ${i + 1}.`);
+                return false;
+            }
         }
-
         return true;
     };
     const handlePageChange = (event, value) => {
@@ -57,7 +78,7 @@ const QuizForm = () => {
         setQuiz({ ...quiz, questions: newQuestions });
     };
     const handleAddQuestion = () => {
-        if (!validateCurrentQuestion()) return;
+        if (!validateQuiz()) return;
         setQuiz({
             ...quiz,
             questions: [...quiz.questions, { questionContent: '', answers: [] }]
@@ -77,6 +98,10 @@ const QuizForm = () => {
     };
 
     const handleAddAnswer = (qIndex) => {
+        if (quiz.questions[qIndex].answers.length >= 4) {
+            alert('You can have a maximum of 4 answers per question.');
+            return;
+        }
         const newQuestions = [...quiz.questions];
         newQuestions[qIndex].answers.push({ answerContent: '', isCorrect: false });
         setQuiz({ ...quiz, questions: newQuestions });
@@ -115,27 +140,10 @@ const QuizForm = () => {
                             onAnswerChange={handleAnswerChange}
                             onAddAnswer={handleAddAnswer}
                             onDeleteAnswer={handleDeleteAnswer}
+                            canDelete={quiz.questions.length > 1}
                         />
                     </Grid>
                 </Grid>
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}>
-                <Button
-                    startIcon={<AddBoxIcon />}
-                    onClick={handleAddQuestion}
-                    variant="contained"
-                    color="secondary"
-                >
-                    Add Question
-                </Button>
-                <Button
-                    startIcon={<SaveIcon />}
-                    onClick={handleSubmitQuiz}
-                    variant="contained"
-                    color="primary"
-                >
-                    Submit Quiz
-                </Button>
             </Box>
             {quiz.questions.length > 1 && (
                 <Pagination
@@ -148,6 +156,31 @@ const QuizForm = () => {
                     sx={{ mt: 4, justifyContent: 'center', display: 'flex' }}
                 />
             )}
+            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}>
+                <Button
+                    startIcon={<AddBoxIcon />}
+                    onClick={handleAddQuestion}
+                    variant="contained"
+                    color="secondary"
+                >
+                    Add Question
+                </Button>
+                <Button
+                    startIcon={<SaveIcon />}
+                    onClick={() => setConfirmOpen(true)}
+                    variant="contained"
+                    color="primary"
+                >
+                    Submit Quiz
+                </Button>
+            </Box>
+            <ConfirmationDialog
+                open={confirmOpen}
+                onCancel={() => setConfirmOpen(false)}
+                onConfirm={submitQuiz}
+                title="Are you sure you want to submit the quiz?"
+                content="Please confirm before submitting the quiz."
+            />
         </Box>
     );
 };
