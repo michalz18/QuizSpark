@@ -12,7 +12,7 @@ import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import QuizIcon from '@mui/icons-material/Quiz';
 import CreateIcon from '@mui/icons-material/Create';
 
-const DashboardAppBar = ({ onCreateQuizClick }) => {
+const DashboardAppBar = ({ onCreateQuizClick, onSolveQuizClick }) => {
     const [anchorEl, setAnchorEl] = useState(null);
 
     return (
@@ -31,7 +31,7 @@ const DashboardAppBar = ({ onCreateQuizClick }) => {
                     </Typography>
                 </Box>
                 <Box sx={{ flexGrow: 2, display: 'flex', justifyContent: 'center' }}>
-                    <Button color="inherit" startIcon={<QuizIcon />} href="/solve-quiz">
+                    <Button color="inherit" startIcon={<QuizIcon />} onClick={onSolveQuizClick}>
                         Solve quiz
                     </Button>
                     <Button
