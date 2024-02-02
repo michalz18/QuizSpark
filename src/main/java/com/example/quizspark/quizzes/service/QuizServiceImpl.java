@@ -2,7 +2,7 @@ package com.example.quizspark.quizzes.service;
 
 import com.example.quizspark.quizzes.model.Quiz;
 import com.example.quizspark.quizzes.repository.QuizRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,14 +12,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class QuizServiceImpl implements QuizService {
 
     private final QuizRepository quizRepository;
-
-    @Autowired
-    public QuizServiceImpl(QuizRepository quizRepository) {
-        this.quizRepository = quizRepository;
-    }
 
     @Override
     @Transactional
@@ -28,6 +24,7 @@ public class QuizServiceImpl implements QuizService {
             question.setQuiz(quiz);
             question.getAnswers().forEach(answer -> answer.setQuestion(question));
         });
+
         return quizRepository.save(quiz);
     }
 

@@ -26,9 +26,4 @@ public class Quiz {
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Question> questions = new ArrayList<>();
-
-    public void addQuestion(Question question) {
-        questions.add(question);
-        question.setQuiz(this);
-    }
 }

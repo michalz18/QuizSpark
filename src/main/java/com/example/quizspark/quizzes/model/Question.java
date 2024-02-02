@@ -1,7 +1,6 @@
 package com.example.quizspark.quizzes.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -32,10 +31,5 @@ public class Question {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Answer> answers = new ArrayList<>();
-
-    public void addAnswer(Answer answer) {
-        answers.add(answer);
-        answer.setQuestion(this);
-    }
 
 }
