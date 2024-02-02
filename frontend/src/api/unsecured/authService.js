@@ -2,7 +2,7 @@ import axiosInstance from '../axiosInstance';
 
 export const registerUser = async (userData) => {
     try {
-        const { data } = await axiosInstance.post(process.env.REACT_APP_API_REGISTER_URL, userData);
+        const { data } = await axiosInstance.post('/authentication/register', userData);
         console.log('Registration process was successful', data);
         return data;
     } catch (error) {
@@ -13,7 +13,7 @@ export const registerUser = async (userData) => {
 
 export const authenticateUser = async (userData) => {
     try {
-        const { data } = await axiosInstance.post(process.env.REACT_APP_API_AUTHENTICATE_URL, userData);
+        const { data } = await axiosInstance.post('/authentication/authenticate', userData);
         console.log('Authentication successful', data);
         return data;
     } catch (error) {
