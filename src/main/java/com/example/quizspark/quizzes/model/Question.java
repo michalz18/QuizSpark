@@ -1,6 +1,7 @@
 package com.example.quizspark.quizzes.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,8 +13,10 @@ import java.util.UUID;
 @Setter
 public class Question {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
+    @NotBlank(message = "Content must not be blank")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
