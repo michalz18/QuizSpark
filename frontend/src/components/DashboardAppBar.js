@@ -1,4 +1,3 @@
-// src/components/DashboardAppBar.js
 import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -13,7 +12,7 @@ import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import QuizIcon from '@mui/icons-material/Quiz';
 import CreateIcon from '@mui/icons-material/Create';
 
-const DashboardAppBar = () => {
+const DashboardAppBar = ({ onCreateQuizClick }) => {
     const [anchorEl, setAnchorEl] = useState(null);
 
     return (
@@ -33,10 +32,14 @@ const DashboardAppBar = () => {
                 </Box>
                 <Box sx={{ flexGrow: 2, display: 'flex', justifyContent: 'center' }}>
                     <Button color="inherit" startIcon={<QuizIcon />} href="/solve-quiz">
-                        Solve quizz
+                        Solve quiz
                     </Button>
-                    <Button color="inherit" startIcon={<CreateIcon />} href="/create-quiz">
-                        Create own quizz
+                    <Button
+                        color="inherit"
+                        startIcon={<CreateIcon />}
+                        onClick={onCreateQuizClick}
+                    >
+                        Create own quiz
                     </Button>
                 </Box>
                 <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>

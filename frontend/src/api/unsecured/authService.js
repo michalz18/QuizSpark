@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axiosInstance from '../axiosInstance';
 
 export const registerUser = async (userData) => {
     try {
-        const { data } = await axios.post('http://localhost:8080/api/authentication/register', userData);
+        const { data } = await axiosInstance.post('/authentication/register', userData);
         console.log('Registration process was successful', data);
         return data;
     } catch (error) {
@@ -10,9 +10,10 @@ export const registerUser = async (userData) => {
         throw error;
     }
 };
+
 export const authenticateUser = async (userData) => {
     try {
-        const { data } = await axios.post('http://localhost:8080/api/authentication/authenticate', userData);
+        const { data } = await axiosInstance.post('/authentication/authenticate', userData);
         console.log('Authentication successful', data);
         return data;
     } catch (error) {
