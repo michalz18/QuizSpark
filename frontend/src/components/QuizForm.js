@@ -83,7 +83,13 @@ const QuizForm = () => {
                 onDeleteAnswer={handleDeleteAnswer}
                 canDelete={quiz.questions.length > 1}
             />
-            <Button startIcon={<AddCircleOutlineIcon />} onClick={handleAddQuestion}>
+            <Button
+                startIcon={<AddCircleOutlineIcon />}
+                onClick={handleAddQuestion}
+                variant="contained"
+                color="secondary"
+                sx={{ mt: 2 }}
+            >
                 Add Question
             </Button>
             {quiz.questions.length > 1 && (
