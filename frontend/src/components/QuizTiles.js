@@ -1,30 +1,71 @@
-// Assuming the file path: /src/components/QuizTiles.js
-
 import React, { useState } from 'react';
-import { Grid, Card, CardContent, Typography } from '@mui/material';
+import useSWR from 'swr';
+import { Container, Grid, Card, CardContent, Typography, CardActionArea, CircularProgress, Alert, Button } from '@mui/material';
+import QuizDialog from './QuizDialog';
+import { getAllQuizzes } from "../api/secured/quizService";
 
 const QuizTiles = () => {
-    const [quizzes] = useState([
-        { id: '1', title: 'Introduction to React' },
-        { id: '2', title: 'Advanced React Patterns' },
-        { id: '3', title: 'State Management' },
-        { id: '4', title: 'React Performance Optimization' }
-    ]);
+    const [selectedQuiz, setSelectedQuiz] = useState(null);
+    const [quizDialogOpen, setQuizDialogOpen] = useState(false);
+
+    const { data: quizzes, error } = useSWR('quizzes', getAllQuizzes);
+
+    if (!quizzes && !error) {
+        return (
+            <Container maxWidth="lg" sx={{ mt: 4, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <CircularProgress />
+            </Container>
+        );
+    }
+
+    if (error) {
+        return (
+            <Container maxWidth="lg" sx={{ mt: 4 }}>
+                <Alert severity="error">An error occurred while loading the quizzes. Please try refreshing the page.</Alert>
+            </Container>
+        );
+    }
+
+    if (quizzes && quizzes.length === 0) {
+        return (
+            <Container maxWidth="lg" sx={{ mt: 4, textAlign: 'center' }}>
+                <Typography sx={{ mb: 2 }}>No quizzes found. Would you like to create the first one?</Typography>
+            </Container>
+        );
+    }
 
     return (
-        <Grid container spacing={2}>
-            {quizzes.map((quiz) => (
-                <Grid item xs={12} sm={6} md={4} key={quiz.id}>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h5" component="div">
-                                {quiz.title}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            ))}
-        </Grid>
+        <Container maxWidth="lg" sx={{ mt: 4 }}>
+            <Grid container spacing={2} justifyContent="center">
+                {quizzes.map((quiz) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={quiz.id}>
+                        <Card>
+                            <CardActionArea onClick={(quiz) => {
+                                setSelectedQuiz(quiz);
+                                setQuizDialogOpen(true);
+                            }}>
+                                <CardContent>
+                                    <Typography variant="h6" component="div" sx={{ textAlign: 'center' }}>
+                                        {quiz.title}
+                                    </Typography>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    </Grid>
+                ))}
+            </Grid>
+
+            {selectedQuiz && (
+                <QuizDialog
+                    quiz={selectedQuiz}
+                    open={quizDialogOpen}
+                    handleClose={() => {
+                        setQuizDialogOpen(false);
+                        setSelectedQuiz(null);
+                    }}
+                />
+            )}
+        </Container>
     );
 };
 
