@@ -10,6 +10,22 @@ const QuizForm = () => {
     });
     const [currentPage, setCurrentPage] = useState(1);
 
+
+    const validateCurrentQuestion = () => {
+        const currentQuestion = quiz.questions[currentPage - 1];
+        if (!currentQuestion.questionContent.endsWith('?') || currentQuestion.questionContent === '') {
+            alert('Question must end with a question mark and cannot be empty.');
+            return false;
+        }
+
+        const hasEmptyAnswer = currentQuestion.answers.some(answer => answer.answerContent === '');
+        if (hasEmptyAnswer) {
+            alert('All answers must be filled.');
+            return false;
+        }
+
+        return true;
+    };
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
     };
@@ -34,6 +50,7 @@ const QuizForm = () => {
     };
 
     const handleAddQuestion = () => {
+        if (!validateCurrentQuestion()) return;
         setQuiz({
             ...quiz,
             questions: [...quiz.questions, { questionContent: '', answers: [] }]
