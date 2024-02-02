@@ -1,7 +1,19 @@
 import React from 'react';
-import { Box, Card, CardContent, TextField, IconButton, Button, Checkbox, Typography, Grid, CardActions } from '@mui/material';
+import {
+    Box,
+    Card,
+    CardContent,
+    TextField,
+    IconButton,
+    Button,
+    Checkbox,
+    Grid,
+    CardActions,
+    Tooltip
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+
 
 const QuestionCard = ({ question, index, onChange, onDelete, onAnswerChange, onAddAnswer, onDeleteAnswer, canDelete }) => (
     <Card variant="outlined" sx={{ mb: 2 }}>
@@ -27,15 +39,19 @@ const QuestionCard = ({ question, index, onChange, onDelete, onAnswerChange, onA
                         margin="normal"
                         sx={{ flexGrow: 1 }}
                     />
+                    <Tooltip title="Select as correct answer" placement="top">
                     <Checkbox
                         checked={answer.isCorrect}
                         onChange={e => onAnswerChange(e, index, aIndex, 'isCorrect')}
                         color="primary"
                         sx={{ mx: 2 }}
                     />
+                    </Tooltip>
+                    <Tooltip title="Remove answer" placement="top">
                     <IconButton color="primary" onClick={() => onDeleteAnswer(index, aIndex)}>
                         <DeleteIcon />
                     </IconButton>
+                    </Tooltip>
                 </Box>
             ))}
             <Button startIcon={<AddCircleOutlineIcon />} onClick={() => onAddAnswer(index)}>
@@ -43,12 +59,12 @@ const QuestionCard = ({ question, index, onChange, onDelete, onAnswerChange, onA
             </Button>
         </CardContent>
         {canDelete && (
-            <CardActions sx={{ justifyContent: 'center' }}> {/* Wyśrodkowanie przycisku w CardActions */}
+            <CardActions sx={{ justifyContent: 'center' }}>
                 <Button
                     startIcon={<DeleteIcon />}
                     onClick={() => onDelete(index)}
                     color="error"
-                    sx={{ maxWidth: 'fit-content' }} // Ustawienie maksymalnej szerokości przycisku
+                    sx={{ maxWidth: 'fit-content' }}
                 >
                     Remove Question
                 </Button>
