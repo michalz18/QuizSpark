@@ -5,7 +5,6 @@ import com.example.quizspark.quizzes.dto.ResultDTO;
 import com.example.quizspark.quizzes.model.Answer;
 import com.example.quizspark.quizzes.model.Question;
 import com.example.quizspark.quizzes.model.Quiz;
-import com.example.quizspark.quizzes.model.Result;
 import com.example.quizspark.quizzes.repository.QuizRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
