@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, Pagination } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import QuestionCard from './QuestionCard'; // Make sure the import path is correct
+import QuestionCard from './QuestionCard';
 
 const QuizForm = () => {
     const [quiz, setQuiz] = useState({
         title: '',
-        questions: []
+        questions: [{ questionContent: '', answers: [] }]
     });
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -22,8 +22,8 @@ const QuizForm = () => {
 
     const handleAnswerChange = (event, qIndex, aIndex, key = 'answerContent') => {
         const newQuestions = [...quiz.questions];
-        if(key === 'isCorrect') {
-            newQuestions[qIndex].answers[aIndex][key] = event.target.checked; // Changed for checkbox
+        if (key === 'isCorrect') {
+            newQuestions[qIndex].answers[aIndex][key] = event.target.checked;
         } else {
             newQuestions[qIndex].answers[aIndex][key] = event.target.value;
         }
@@ -35,12 +35,18 @@ const QuizForm = () => {
             ...quiz,
             questions: [...quiz.questions, { questionContent: '', answers: [] }]
         });
+        setCurrentPage(quiz.questions.length + 1);
     };
 
     const handleDeleteQuestion = (index) => {
-        const newQuestions = [...quiz.questions];
-        newQuestions.splice(index, 1);
-        setQuiz({ ...quiz, questions: newQuestions });
+        if (quiz.questions.length > 1) {
+            const newQuestions = [...quiz.questions];
+            newQuestions.splice(index, 1);
+            setQuiz({ ...quiz, questions: newQuestions });
+            if (currentPage > newQuestions.length) {
+                setCurrentPage(newQuestions.length);
+            }
+        }
     };
 
     const handleAddAnswer = (qIndex) => {
@@ -64,17 +70,16 @@ const QuizForm = () => {
                 onChange={(e) => setQuiz({ ...quiz, title: e.target.value })}
                 margin="normal"
             />
-            {quiz.questions.length > 0 && (
-                <QuestionCard
-                    question={quiz.questions[currentPage - 1]}
-                    index={currentPage - 1}
-                    onChange={handleQuestionChange}
-                    onDelete={handleDeleteQuestion}
-                    onAnswerChange={handleAnswerChange}
-                    onAddAnswer={handleAddAnswer}
-                    onDeleteAnswer={handleDeleteAnswer}
-                />
-            )}
+            <QuestionCard
+                question={quiz.questions[currentPage - 1]}
+                index={currentPage - 1}
+                onChange={handleQuestionChange}
+                onDelete={handleDeleteQuestion}
+                onAnswerChange={handleAnswerChange}
+                onAddAnswer={handleAddAnswer}
+                onDeleteAnswer={handleDeleteAnswer}
+                canDelete={quiz.questions.length > 1}
+            />
             <Button startIcon={<AddCircleOutlineIcon />} onClick={handleAddQuestion}>
                 Add Question
             </Button>
