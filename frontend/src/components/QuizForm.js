@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import {Box, TextField, Button, Pagination, Grid} from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import QuestionCard from './QuestionCard';
+import SaveIcon from '@mui/icons-material/Save';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 const QuizForm = () => {
     const [quiz, setQuiz] = useState({
@@ -36,19 +37,14 @@ const QuizForm = () => {
         setQuiz({ ...quiz, questions: newQuestions });
     };
 
-    const handleAnswerChange = (event, qIndex, aIndex) => {
+    const handleAnswerChange = (event, qIndex, aIndex, field = 'answerContent', newValue = '') => {
         const newQuestions = [...quiz.questions];
-        const newAnswers = newQuestions[qIndex].answers.map((answer, index) => {
-            return {
-                ...answer,
-                isCorrect: index === aIndex ? event.target.checked : false
-            };
-        });
-
+        const newAnswers = [...newQuestions[qIndex].answers];
+        newAnswers[aIndex] = { ...newAnswers[aIndex], [field]: field === 'isCorrect' ? event.target.checked : newValue };
         newQuestions[qIndex].answers = newAnswers;
+
         setQuiz({ ...quiz, questions: newQuestions });
     };
-
     const handleAddQuestion = () => {
         if (!validateCurrentQuestion()) return;
         setQuiz({
@@ -97,25 +93,39 @@ const QuizForm = () => {
                     />
                 </Grid>
             </Grid>
-            <QuestionCard
-                question={quiz.questions[currentPage - 1]}
-                index={currentPage - 1}
-                onChange={handleQuestionChange}
-                onDelete={handleDeleteQuestion}
-                onAnswerChange={handleAnswerChange}
-                onAddAnswer={handleAddAnswer}
-                onDeleteAnswer={handleDeleteAnswer}
-                canDelete={quiz.questions.length > 1}
-            />
-            <Button
-                startIcon={<AddCircleOutlineIcon />}
-                onClick={handleAddQuestion}
-                variant="contained"
-                color="secondary"
-                sx={{ mt: 2 }}
-            >
-                Add Question
-            </Button>
+            <Box sx={{ my: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Grid container justifyContent="center" alignItems="center">
+                    <Grid item xs={12} sm={8} md={6}>
+                        <QuestionCard
+                            question={quiz.questions[currentPage - 1]}
+                            index={currentPage - 1}
+                            onChange={handleQuestionChange}
+                            onDelete={handleDeleteQuestion}
+                            onAnswerChange={handleAnswerChange}
+                            onAddAnswer={handleAddAnswer}
+                            onDeleteAnswer={handleDeleteAnswer}
+                        />
+                    </Grid>
+                </Grid>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}>
+                <Button
+                    startIcon={<AddBoxIcon />}
+                    onClick={handleAddQuestion}
+                    variant="contained"
+                    color="secondary"
+                >
+                    Add Question
+                </Button>
+                <Button
+                    startIcon={<SaveIcon />}
+                    onClick={() => console.log('Submitting Quiz...')}
+                    variant="contained"
+                    color="primary"
+                >
+                    Submit Quiz
+                </Button>
+            </Box>
             {quiz.questions.length > 1 && (
                 <Pagination
                     count={quiz.questions.length}
@@ -124,7 +134,7 @@ const QuizForm = () => {
                     color="primary"
                     hidePrevButton
                     hideNextButton
-                    sx={{ mt: 2, justifyContent: 'center', display: 'flex' }}
+                    sx={{ mt: 4, justifyContent: 'center', display: 'flex' }}
                 />
             )}
         </Box>

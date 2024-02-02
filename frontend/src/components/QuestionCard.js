@@ -16,7 +16,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 
 const QuestionCard = ({ question, index, onChange, onDelete, onAnswerChange, onAddAnswer, onDeleteAnswer, canDelete }) => (
-    <Card variant="outlined" sx={{ mb: 2 }}>
+    <Card variant="outlined" sx={{ mb: 4, boxShadow: 3}}>
         <CardContent>
             <Grid container spacing={2} alignItems="center">
                 <Grid item xs={12} md={8}>
@@ -26,6 +26,7 @@ const QuestionCard = ({ question, index, onChange, onDelete, onAnswerChange, onA
                         value={question.questionContent}
                         onChange={e => onChange(e, index)}
                         margin="normal"
+                        required
                     />
                 </Grid>
             </Grid>

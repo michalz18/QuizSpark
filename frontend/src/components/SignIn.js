@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { authenticateUser } from '../api/authService';
+import { authenticateUser } from '../api/unsecured/authService';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
