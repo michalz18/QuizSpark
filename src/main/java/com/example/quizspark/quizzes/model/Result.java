@@ -1,15 +1,14 @@
 package com.example.quizspark.quizzes.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class Result {
-    private final int totalQuestions;
-    private final int correctAnswers;
-    private final double score;
+    private int totalQuestions;
+    private int correctAnswers;
+    private double score;
 }
 
