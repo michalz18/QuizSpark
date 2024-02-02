@@ -20,13 +20,16 @@ const QuizForm = () => {
         setQuiz({ ...quiz, questions: newQuestions });
     };
 
-    const handleAnswerChange = (event, qIndex, aIndex, key = 'answerContent') => {
+    const handleAnswerChange = (event, qIndex, aIndex) => {
         const newQuestions = [...quiz.questions];
-        if (key === 'isCorrect') {
-            newQuestions[qIndex].answers[aIndex][key] = event.target.checked;
-        } else {
-            newQuestions[qIndex].answers[aIndex][key] = event.target.value;
-        }
+        const newAnswers = newQuestions[qIndex].answers.map((answer, index) => {
+            return {
+                ...answer,
+                isCorrect: index === aIndex ? event.target.checked : false
+            };
+        });
+
+        newQuestions[qIndex].answers = newAnswers;
         setQuiz({ ...quiz, questions: newQuestions });
     };
 
