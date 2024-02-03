@@ -1,5 +1,7 @@
 package com.example.quizspark.security.authentication.service;
 
+import com.example.quizspark.admin.dto.UserDTO;
+import com.example.quizspark.admin.mapper.UserMapper;
 import com.example.quizspark.assets.UserNotFoundException;
 import com.example.quizspark.security.authentication.requests.AuthenticationRequest;
 import com.example.quizspark.security.authentication.requests.RegisterRequest;
@@ -13,6 +15,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +56,15 @@ public class AuthenticationService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + request.getEmail()));
 
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder().email(request.getEmail()).token(jwtToken).build();
+        return AuthenticationResponse.builder()
+                .email(request.getEmail())
+                .token(jwtToken)
+                .build();
+    }
+
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(UserMapper.INSTANCE::userToUserDTO)
+                .toList();
     }
 }
