@@ -5,13 +5,18 @@ export const createQuiz = async (quizData) => {
 };
 
 export const getQuizById = async (id) => {
-    const response = await axios.get(`${process.env.REACT_APP_API_QUIZ_URL}/${id}`);
+    const response = await axios.get(`/quizzes/${id}`);
     return response.data;
 };
 
 export const getAllQuizzes = async () => {
-    const response = await axios.get(`${process.env.REACT_APP_API_QUIZ_UR}`);
+    const response = await axios.get(`/quizzes`);
     return response.data;
 };
+export const solveQuiz = async (id, answers) => {
+    const response = await axios.post(`/quizzes/${id}/solve`, answers);
+    return response.data;
+};
+
 
 
