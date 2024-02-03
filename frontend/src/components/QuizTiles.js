@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import useSWR from 'swr';
-import { Container, Grid, Card, CardContent, Typography, CardActionArea, CircularProgress, Alert, Button } from '@mui/material';
+import { Container, Grid, Card, CardContent, Typography, CardActionArea, CircularProgress, Alert } from '@mui/material';
 import QuizDialog from './QuizDialog';
 import { getAllQuizzes } from "../api/secured/quizService";
 
 const QuizTiles = () => {
-    const [selectedQuiz, setSelectedQuiz] = useState(null);
+    const [selectedQuizId, setSelectedQuizId] = useState(null);
     const [quizDialogOpen, setQuizDialogOpen] = useState(false);
-
     const { data: quizzes, error } = useSWR('quizzes', getAllQuizzes);
-
     if (!quizzes && !error) {
         return (
             <Container maxWidth="lg" sx={{ mt: 4, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -40,8 +38,8 @@ const QuizTiles = () => {
                 {quizzes.map((quiz) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={quiz.id}>
                         <Card>
-                            <CardActionArea onClick={(quiz) => {
-                                setSelectedQuiz(quiz);
+                            <CardActionArea onClick={() => {
+                                setSelectedQuizId(quiz.id);
                                 setQuizDialogOpen(true);
                             }}>
                                 <CardContent>
@@ -55,18 +53,17 @@ const QuizTiles = () => {
                 ))}
             </Grid>
 
-            {selectedQuiz && (
+            {selectedQuizId && (
                 <QuizDialog
-                    quiz={selectedQuiz}
+                    quizId={selectedQuizId}
                     open={quizDialogOpen}
                     handleClose={() => {
                         setQuizDialogOpen(false);
-                        setSelectedQuiz(null);
+                        setSelectedQuizId(null);
                     }}
                 />
             )}
         </Container>
     );
 };
-
 export default QuizTiles;
