@@ -6,7 +6,9 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
-    const login = (userData, token) => {
+
+    const login = (email, role, token) => {
+        const userData = { email, role };
         localStorage.setItem('token', token);
         setCurrentUser(userData);
     };
