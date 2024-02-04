@@ -56,7 +56,7 @@ Explore QuizSpark in action through these snapshots:
 
 4. **Generate a 256-bit encryption key:**
    
-   - You can do it for example on this website: https://acte.ltd/utils/randomkeygen
+   - You can do it for example on this website: https://codebeautify.org/generate-random-hexadecimal-numbers (choose 64 digits)
    - Update the `src/main/resources/application.properties` file with your generated key:
     ```properties
     # Security
