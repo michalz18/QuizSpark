@@ -3,6 +3,7 @@ import DashboardAppBar from '../components/DashboardAppBar';
 import Greeting from '../components/Greeting';
 import QuizForm from '../components/QuizForm';
 import QuizTiles from '../components/QuizTiles';
+import UserManagementDashboard from "../components/UserManagementDashboard";
 import { useAuth } from '../context/AuthContext';
 
 const HomePage = () => {
@@ -14,9 +15,11 @@ const HomePage = () => {
                 return <QuizForm />;
             case 'quizTiles':
                 return <QuizTiles />;
+            case 'userManagementDashboard':
+                return <UserManagementDashboard />;
             case 'greeting':
             default:
-                return <Greeting email={currentUser} />;
+                return <Greeting email={currentUser.email} />;
         }
     };
 
@@ -25,6 +28,7 @@ const HomePage = () => {
             <DashboardAppBar
                 onCreateQuizClick={() => setActiveComponent('quizForm')}
                 onSolveQuizClick={() => setActiveComponent('quizTiles')}
+                onUserManagementClick={() => setActiveComponent('userManagementDashboard')}
             />
             {renderComponent()}
         </div>

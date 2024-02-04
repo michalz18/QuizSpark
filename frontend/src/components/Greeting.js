@@ -7,7 +7,7 @@ const Greeting = ({ email }) => {
     return (
         <Box sx={{ display: 'flex', textAlign: 'center', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <Typography variant="h4">
-                Hello, {email}! <br /> Hope you will enjoy my application :)
+                <div>Hello, {email}! <br /> Hope you will enjoy my application :)</div>
             </Typography>
         </Box>
     );

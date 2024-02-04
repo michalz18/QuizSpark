@@ -36,7 +36,7 @@ export default function SignIn() {
         onSubmit: async (values, { setFieldError }) => {
             try {
                 const response = await authenticateUser(values);
-                login(response.email, response.token);
+                login(response.email, response.role, response.token);
                 navigate('/dashboard');
             } catch (error) {
                 console.error('Authentication failed', error);

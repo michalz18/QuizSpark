@@ -11,9 +11,13 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import QuizIcon from '@mui/icons-material/Quiz';
 import CreateIcon from '@mui/icons-material/Create';
+import { useAuth } from '../context/AuthContext';
 
-const DashboardAppBar = ({ onCreateQuizClick, onSolveQuizClick }) => {
+const DashboardAppBar = ({ onCreateQuizClick, onSolveQuizClick, onUserManagementClick }) => {
     const [anchorEl, setAnchorEl] = useState(null);
+    const { currentUser } = useAuth();
+
+    const isAdmin = currentUser && currentUser.role === 'ADMIN';
 
     return (
         <AppBar position="static">
@@ -30,22 +34,34 @@ const DashboardAppBar = ({ onCreateQuizClick, onSolveQuizClick }) => {
                         QuizSpark
                     </Typography>
                 </Box>
-                <Box sx={{ flexGrow: 2, display: 'flex', justifyContent: 'center' }}>
-                    <Button color="inherit" startIcon={<QuizIcon />} onClick={onSolveQuizClick}>
-                        Solve quiz
-                    </Button>
-                    <Button
-                        color="inherit"
-                        startIcon={<CreateIcon />}
-                        onClick={onCreateQuizClick}
-                    >
-                        Create own quiz
-                    </Button>
-                </Box>
+                {isAdmin ? (
+                    <Box sx={{ flexGrow: 2, display: 'flex', justifyContent: 'center' }}>
+                        <Button
+                            color="inherit"
+                            onClick={onUserManagementClick}
+                        >
+                            User Management
+                        </Button>
+                    </Box>
+                ) : (
+                    <Box sx={{ flexGrow: 2, display: 'flex', justifyContent: 'center' }}>
+                        <Button color="inherit" startIcon={<QuizIcon />} onClick={onSolveQuizClick}>
+                            Solve quiz
+                        </Button>
+                        <Button
+                            color="inherit"
+                            startIcon={<CreateIcon />}
+                            onClick={onCreateQuizClick}
+                        >
+                            Create own quiz
+                        </Button>
+                    </Box>
+                )}
                 <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                     <IconButton
                         color="inherit"
                         aria-label="display more actions"
+                        edge="end"
                         onClick={(event) => setAnchorEl(event.currentTarget)}
                     >
                         <MoreVertIcon />
