@@ -34,9 +34,4 @@ public class RegisterRequest {
      * The password chosen by the user for the new account.
      */
     private String password;
-
-    /**
-     * The role the user is requesting. Depending on application policies, this may require approval.
-     */
-    private String role;
 }

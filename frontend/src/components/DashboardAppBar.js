@@ -71,10 +71,7 @@ const DashboardAppBar = ({ onCreateQuizClick, onSolveQuizClick, onUserManagement
                         open={Boolean(anchorEl)}
                         onClose={() => setAnchorEl(null)}
                     >
-                        <MenuItem onClick={() => setAnchorEl(null)} component="a" href="/change-password">
-                            Change credentials
-                        </MenuItem>
-                        <MenuItem onClick={() => setAnchorEl(null)} component="a" href="/logout">
+                        <MenuItem onClick={() => setAnchorEl(null)} component="a" href="/">
                             Logout
                         </MenuItem>
                     </Menu>

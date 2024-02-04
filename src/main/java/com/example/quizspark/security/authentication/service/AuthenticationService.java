@@ -32,18 +32,21 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     /**
-     * Registers a new user with the provided registration details.
+     * Registers a new user with the provided registration details. The first registered user gets an ADMIN role,
+     * and subsequent users get a USER role.
      *
      * @param request The registration request containing user details.
      * @return An {@link AuthenticationResponse} containing the JWT token for the registered user.
      */
     public AuthenticationResponse register(RegisterRequest request) {
+        Role assignedRole = userRepository.count() == 0 ? Role.ADMIN : Role.USER;
+
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.valueOf(request.getRole()))
+                .role(assignedRole)
                 .build();
 
         userRepository.save(user);

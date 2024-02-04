@@ -1,39 +1,44 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import React, { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { registerUser } from '../api/unsecured/authService';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
-import { useState } from "react";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import {
+    Avatar,
+    Button,
+    CssBaseline,
+    TextField,
+    Link,
+    Grid,
+    Box,
+    Typography,
+    Container,
+    Snackbar,
+    Alert,
+    createTheme,
+    ThemeProvider,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText, DialogActions
+} from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { registerUser } from '../api/unsecured/authService';
 
 const validationSchema = Yup.object({
     firstname: Yup.string().required('First name is required'),
     lastname: Yup.string().required('Last name is required'),
     email: Yup.string().email('Enter a valid email').required('Email is required'),
     password: Yup.string().min(8, 'Password should be of minimum 8 characters length').required('Password is required'),
-    role: Yup.string().required('Role is required')
+    confirmPassword: Yup.string()
+        .oneOf([Yup.ref('password'), null], 'Passwords must match')
+        .required('Confirm password is required'),
 });
 
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogContent, setDialogContent] = useState('');
     const navigate = useNavigate();
 
     const formik = useFormik({
@@ -42,28 +47,23 @@ export default function SignUp() {
             lastname: '',
             email: '',
             password: '',
-            role: ''
+            confirmPassword: '',
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             try {
                 await registerUser(values);
-                console.log('Registration process was successful');
-                setOpenSnackbar(true);
-                navigate('/');
+                setDialogContent('Registration successful! You can now sign in.');
+                setDialogOpen(true);
                 formik.resetForm();
+                setTimeout(() => navigate('/'), 2000);
             } catch (error) {
+                setDialogContent('Error during registration process: ' + error.message);
+                setDialogOpen(true);
                 console.error('Error during registration process:', error);
             }
         },
     });
-
-    const handleCloseSnackbar = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpenSnackbar(false);
-    };
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -144,21 +144,20 @@ export default function SignUp() {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <InputLabel id="role-select-label">Role</InputLabel>
-                                    <Select
-                                        labelId="role-select-label"
-                                        id="role"
-                                        name="role"
-                                        value={formik.values.role}
-                                        label="Role"
-                                        onChange={formik.handleChange}
-                                        error={formik.touched.role && Boolean(formik.errors.role)}
-                                    >
-                                        <MenuItem value={"USER"}>User</MenuItem>
-                                        <MenuItem value={"ADMIN"}>Admin</MenuItem>
-                                    </Select>
-                                </FormControl>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="confirmPassword"
+                                    label="Confirm Password"
+                                    type="password"
+                                    id="confirmPassword"
+                                    autoComplete="new-password"
+                                    value={formik.values.confirmPassword}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+                                    helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                                    sx={{ mb: 2 }}
+                                />
                             </Grid>
                         </Grid>
                         <Button
@@ -178,11 +177,24 @@ export default function SignUp() {
                         </Grid>
                     </Box>
                 </Box>
-                <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-                    <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-                        Registration successful!
-                    </Alert>
-                </Snackbar>
+                <Dialog
+                    open={dialogOpen}
+                    onClose={() => setDialogOpen(false)}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"Registration Status"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            {dialogContent}
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setDialogOpen(false)} color="primary" autoFocus>
+                            Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Container>
         </ThemeProvider>
     );
