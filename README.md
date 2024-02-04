@@ -41,9 +41,29 @@ Explore QuizSpark in action through these snapshots:
     cd frontend && npm install
     
     // For backend
-    cd backend && ./mvnw install
+    cd QuizSpark && ./mvnw install
     ```
-3. **Run the application:**
+3. **Create PostgreSQL database connection:**
+   - Install PostgreSQL and create a new database.
+   - Update the `src/main/resources/application.properties` file with your database details:
+    ```properties
+    # Database Configuration
+    spring.datasource.url=jdbc:postgresql://localhost:5432/your_database_name
+    spring.datasource.username=your_username
+    spring.datasource.password=your_password
+    spring.jpa.hibernate.ddl-auto=update
+    ```
+
+4. **Generate a 256-bit encryption key:**
+   
+   - You can do it for example on this website: https://acte.ltd/utils/randomkeygen
+   - Update the `src/main/resources/application.properties` file with your generated key:
+    ```properties
+    # Security
+    jwt.secret-key=your_new_secret_key
+    ```
+    
+6. **Run the application:**
     ```
     // Frontend
     npm start
