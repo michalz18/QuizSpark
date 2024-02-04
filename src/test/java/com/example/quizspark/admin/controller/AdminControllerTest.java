@@ -1,13 +1,9 @@
 package com.example.quizspark.admin.controller;
 
-import com.example.quizspark.security.configuration.JwtService;
-import com.example.quizspark.security.configuration.SecurityConfiguration;
-import com.example.quizspark.security.user.Role;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
@@ -17,6 +13,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.quizspark.security.authentication.service.AuthenticationService;
 import com.example.quizspark.admin.dto.UserDTO;
+import com.example.quizspark.security.configuration.JwtService;
+import com.example.quizspark.security.configuration.SecurityConfiguration;
+import com.example.quizspark.security.user.Role;
 
 import java.util.Collections;
 import java.util.UUID;
@@ -26,6 +25,9 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Tests for {@link AdminController} focusing on endpoint access control and response validation.
+ */
 @WebMvcTest(controllers = AdminController.class,
         includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                 classes = SecurityConfiguration.class))
@@ -41,6 +43,12 @@ public class AdminControllerTest {
     @MockBean
     private AuthenticationService authenticationService;
 
+    /**
+     * Tests the {@code getAllUsers} endpoint to ensure it returns a list of users when accessed by an admin.
+     * Verifies the response status, content type, and structure of the returned JSON.
+     *
+     * @throws Exception if the mockMvc.perform operation fails.
+     */
     @Test
     @WithMockUser(authorities="ADMIN")
     public void getAllUsers_WhenAdmin_ShouldReturnListOfUsers() throws Exception {
@@ -55,9 +63,15 @@ public class AdminControllerTest {
                 .andExpect(jsonPath("$[0].firstname", is(userDTO.getFirstname())))
                 .andExpect(jsonPath("$[0].lastname", is(userDTO.getLastname())))
                 .andExpect(jsonPath("$[0].email", is(userDTO.getEmail())))
-                .andExpect(jsonPath("$[0].role", is("ADMIN")));
+                .andExpect(jsonPath("$[0].role", is(userDTO.getRole().toString())));
     }
 
+    /**
+     * Tests the {@code getAllUsers} endpoint to ensure it returns a 403 Forbidden status when accessed by a non-admin user.
+     * This test verifies that role-based access control is properly enforced.
+     *
+     * @throws Exception if the mockMvc.perform operation fails.
+     */
     @Test
     @WithMockUser(authorities="USER")
     public void getAllUsers_WhenUserRole_ShouldReturnForbidden() throws Exception {
