@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Represents a quiz entity with a unique ID, title, and a list of questions.
+ */
 @Entity
 @Getter
 @Setter
@@ -23,6 +26,10 @@ public class Quiz {
     @NotBlank(message = "Title must not be blank")
     private String title;
 
+    /**
+     * A list of questions associated with this quiz.
+     * Managed reference to avoid circular serialization issues.
+     */
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Question> questions = new ArrayList<>();

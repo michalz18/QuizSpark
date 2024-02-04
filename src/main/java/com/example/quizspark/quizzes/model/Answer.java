@@ -8,6 +8,9 @@ import lombok.*;
 
 import java.util.UUID;
 
+/**
+ * Represents an answer to a quiz question, indicating whether the answer is correct.
+ */
 @Entity
 @Getter
 @Setter
@@ -18,6 +21,10 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    /**
+     * The question this answer is associated with.
+     * Back reference to support the relationship without causing serialization issues.
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     @JsonBackReference
