@@ -35,7 +35,7 @@ public class SecurityConfiguration {
                     return configuration;
                 }))
                 .authorizeHttpRequests(authRequests -> authRequests
-                        .requestMatchers(new AntPathRequestMatcher("/api/authentication/register", "/api/authentication/authenticate")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/api/authentication/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/admin/**")).hasAuthority("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(sessionMgmt -> sessionMgmt
